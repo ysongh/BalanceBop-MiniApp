@@ -1,8 +1,11 @@
 import { sdk } from "@farcaster/frame-sdk";
 import { useEffect } from "react";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
+import { useDeviceOrientation } from "./hooks/useDeviceOrientation";
 
 function App() {
+  const { beta, gamma } = useDeviceOrientation();
+
   useEffect(() => {
     sdk.actions.ready();
   }, []);
@@ -10,6 +13,7 @@ function App() {
   return (
     <>
       <div>Balance Bop</div>
+      <p className="text-sm">Tilt: β={beta.toFixed(1)}, γ={gamma.toFixed(1)}</p>
       <ConnectMenu />
     </>
   );
