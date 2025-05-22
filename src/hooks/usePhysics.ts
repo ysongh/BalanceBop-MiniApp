@@ -1,5 +1,5 @@
-import Matter, { Engine } from 'matter-js';
-import { useEffect, useRef } from 'react';
+import Matter, { Bodies, Body, Engine, World } from 'matter-js';
+import { useEffect, useRef, useState } from 'react';
 
 interface PhysicsData {
   engine: Engine;
@@ -8,33 +8,35 @@ interface PhysicsData {
 
 export const usePhysics = (gamma: number): PhysicsData => {
   const engineRef = useRef<Engine>(Matter.Engine.create());
-  const world = engineRef.current.world;
+  const [boxes, setBoxes] = useState<Body[]>([]); // Track boxes in state
 
   useEffect(() => {
-    // Create a static platform
-    const platform = Matter.Bodies.rectangle(200, 500, 200, 20, { isStatic: true });
-    // Create a pile of boxes
-    const boxes = [
-      Matter.Bodies.rectangle(200, 400, 40, 40),
-      Matter.Bodies.rectangle(200, 360, 40, 40),
-      Matter.Bodies.rectangle(200, 320, 40, 40),
-    ];
-    Matter.World.add(world, [platform, ...boxes]);
+    const engine = engineRef.current;
+    const world = engine.world;
 
-    // Update physics based on tilt (gamma)
+    // Create platform and boxes
+    const platform = Bodies.rectangle(200, 500, 200, 20, { isStatic: true });
+    const initialBoxes = [
+      Bodies.rectangle(200, 400, 40, 40),
+      Bodies.rectangle(200, 360, 40, 40),
+      Bodies.rectangle(200, 320, 40, 40),
+    ];
+    World.add(world, [platform, ...initialBoxes]);
+    setBoxes(initialBoxes); // Initialize boxes
+
     const update = () => {
-      boxes.forEach((box) => {
-        Matter.Body.applyForce(box, box.position, { x: gamma * 0.0001, y: 0 });
+      initialBoxes.forEach((box) => {
+        Body.applyForce(box, box.position, { x: gamma * 0.0001, y: 0 });
       });
-      Matter.Engine.update(engineRef.current, 1000 / 60);
+      Matter.Engine.update(engine, 1000 / 60);
     };
 
     const interval = setInterval(update, 1000 / 60);
 
     return () => {
       clearInterval(interval);
-      Matter.World.clear(world);
-      Matter.Engine.clear(engineRef.current);
+      World.clear(world, false);
+      Engine.clear(engine);
     };
   }, [gamma]);
 

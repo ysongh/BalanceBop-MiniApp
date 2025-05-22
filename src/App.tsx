@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDeviceOrientation } from "./hooks/useDeviceOrientation";
 import { usePhysics } from "./hooks/usePhysics";
 import { CanvasRenderer } from "./components/CanvasRenderer";
@@ -7,6 +8,8 @@ function App() {
   const { engine, boxes } = usePhysics(gamma);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  
+  console.log(boxes)
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
