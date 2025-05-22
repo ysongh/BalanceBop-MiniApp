@@ -1,10 +1,11 @@
 import { sdk } from "@farcaster/frame-sdk";
 import { useEffect } from "react";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
-import { useDeviceOrientation } from "./hooks/useDeviceOrientation";
+import { useDeviceOrientation, usePhysics } from "./hooks/useDeviceOrientation";
 
 function App() {
   const { beta, gamma } = useDeviceOrientation();
+  const { engine, boxes } = usePhysics(gamma);
 
   useEffect(() => {
     sdk.actions.ready();
