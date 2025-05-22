@@ -1,67 +1,27 @@
-import { sdk } from "@farcaster/frame-sdk";
-import { useEffect } from "react";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
-import { useDeviceOrientation, usePhysics } from "./hooks/useDeviceOrientation";
+import { useDeviceOrientation } from "./hooks/useDeviceOrientation";
+import { usePhysics } from "./hooks/usePhysics";
+import { CanvasRenderer } from "./components/CanvasRenderer";
 
 function App() {
   const { beta, gamma } = useDeviceOrientation();
   const { engine, boxes } = usePhysics(gamma);
-
-  useEffect(() => {
-    sdk.actions.ready();
-  }, []);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
   return (
-    <>
-      <div>Balance Bop</div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Balance Game</h1>
+      <p className="text-lg">Score: {score}</p>
+      {gameOver && <p className="text-red-500 text-xl">Game Over!</p>}
+      <CanvasRenderer engine={engine} boxes={boxes} />
       <p className="text-sm">Tilt: β={beta.toFixed(1)}, γ={gamma.toFixed(1)}</p>
-      <ConnectMenu />
-    </>
-  );
-}
-
-function ConnectMenu() {
-  const { isConnected, address } = useAccount();
-  const { connect, connectors } = useConnect();
-
-  if (isConnected) {
-    return (
-      <>
-        <div>Connected account:</div>
-        <div>{address}</div>
-        <SignButton />
-      </>
-    );
-  }
-
-  return (
-    <button type="button" onClick={() => connect({ connector: connectors[0] })}>
-      Connect
-    </button>
-  );
-}
-
-function SignButton() {
-  const { signMessage, isPending, data, error } = useSignMessage();
-
-  return (
-    <>
-      <button type="button" onClick={() => signMessage({ message: "hello world" })} disabled={isPending}>
-        {isPending ? "Signing..." : "Sign message"}
+      <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        onClick={() => window.location.reload()}
+      >
+        Restart
       </button>
-      {data && (
-        <>
-          <div>Signature</div>
-          <div>{data}</div>
-        </>
-      )}
-      {error && (
-        <>
-          <div>Error</div>
-          <div>{error.message}</div>
-        </>
-      )}
-    </>
+    </div>
   );
 }
 
