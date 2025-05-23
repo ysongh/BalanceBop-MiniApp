@@ -1,19 +1,34 @@
 import { useEffect, useState } from 'react';
 
-export const useDeviceOrientation = () => {
+interface OrientationData {
+  beta: number;
+  gamma: number;
+}
+
+export const useDeviceOrientation = (): OrientationData => {
   const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 });
 
   useEffect(() => {
-    const handleOrientation = (event) => {
-      setOrientation({ beta: event.beta, gamma: event.gamma }); // beta: front-to-back tilt, gamma: left-to-right tilt
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      const beta = event.beta ?? 0;
+      const gamma = event.gamma ?? 0;
+      console.log('Orientation event:', { beta, gamma, event }); // Debug log
+      setOrientation({ beta, gamma });
     };
 
-    // Request permission for iOS
     const requestPermission = async () => {
       if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        const permission = await DeviceOrientationEvent.requestPermission();
-        if (permission === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation);
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+          } else {
+            console.warn('Device orientation permission denied');
+            setOrientation({ beta: 0, gamma: 0 });
+          }
+        } catch (error) {
+          console.error('Error requesting device orientation permission:', error);
+          setOrientation({ beta: 0, gamma: 0 });
         }
       } else {
         window.addEventListener('deviceorientation', handleOrientation);
