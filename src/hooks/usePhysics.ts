@@ -18,9 +18,9 @@ export const usePhysics = (gamma: number): PhysicsData => {
     // Create platform and boxes
     const platform = Bodies.rectangle(200, 500, 200, 20, { isStatic: true });
     const initialBoxes = [
-      Bodies.rectangle(200, 400, 40, 40),
-      Bodies.rectangle(200, 360, 40, 40),
-      Bodies.rectangle(200, 320, 40, 40),
+      Bodies.rectangle(200, 150, 40, 40),
+      Bodies.rectangle(200, 110, 40, 40),
+      Bodies.rectangle(200, 70, 40, 40),
     ];
     World.add(world, [platform, ...initialBoxes]);
     setBoxes(initialBoxes); // Initialize boxes
