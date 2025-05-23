@@ -1,3 +1,4 @@
+// @ts-ignore
 import Matter, { Bodies, Body, Engine, World } from 'matter-js';
 import { useEffect, useRef, useState } from 'react';
 

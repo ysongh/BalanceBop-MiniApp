@@ -6,8 +6,8 @@ import { CanvasRenderer } from "./components/CanvasRenderer";
 function App() {
   const { beta, gamma } = useDeviceOrientation();
   const { engine, boxes } = usePhysics(gamma);
-  const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [score] = useState(0);
+  const [gameOver] = useState(false);
   
   console.log(boxes)
 

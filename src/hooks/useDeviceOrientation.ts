@@ -17,8 +17,10 @@ export const useDeviceOrientation = (): OrientationData => {
     };
 
     const requestPermission = async () => {
+      // @ts-ignore
       if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         try {
+          // @ts-ignore
           const permission = await DeviceOrientationEvent.requestPermission();
           if (permission === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation);

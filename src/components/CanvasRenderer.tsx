@@ -1,5 +1,5 @@
-// src/components/CanvasRenderer.tsx
 import { useRef, useEffect } from 'react';
+// @ts-ignore
 import { Engine, Body } from 'matter-js';
 
 // Define props interface
